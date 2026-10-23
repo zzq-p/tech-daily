@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 技术日报</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px 16px 60px;
+            background: #f4f6f8;
+            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, "Segoe UI", sans-serif;
+            color: #24292f;
+        }
+        .container { max-width: 860px; margin: 0 auto; }
+        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        h1 { font-size: 26px; margin: 0; }
+        h1 .logo { margin-right: 8px; }
+        .btn {
+            background: #1f883d; color: #fff; border: none; border-radius: 6px;
+            padding: 9px 18px; font-size: 14px; cursor: pointer;
+        }
+        .btn:hover { background: #1a7f37; }
+        .report {
+            background: #fff; border: 1px solid #e1e4e8; border-radius: 10px;
+            padding: 24px 28px; margin-bottom: 20px;
+        }
+        .report h2 {
+            display: flex; justify-content: space-between; align-items: baseline;
+            font-size: 19px; margin: 0 0 16px; padding-bottom: 10px;
+            border-bottom: 1px solid #eaecef;
+        }
+        .report h2 .meta { font-size: 12px; color: #8b949e; font-weight: normal; }
+        .md h3 { margin: 18px 0 8px; }
+        .md li { margin: 4px 0; }
+        .md code {
+            background: #f0f2f4; padding: 1px 6px; border-radius: 4px; font-size: 13px;
+        }
+        .md a { color: #0969da; text-decoration: none; }
+        .md a:hover { text-decoration: underline; }
+        .empty { text-align: center; color: #8b949e; padding: 60px 0; }
+        .empty .btn { margin-top: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1><span class="logo">📰</span>AI 技术日报</h1>
+        <form method="post" action="/generate" onsubmit="this.querySelector('button').disabled=true;this.querySelector('button').textContent='生成中…(约30秒)'">
+            <button class="btn" type="submit">立即生成今日日报</button>
+        </form>
+    </header>
+
+    <div class="empty" th:if="${#lists.isEmpty(reports)}">
+        <p>还没有日报,点击上面的按钮立即生成一份。</p>
+    </div>
+
+    <div class="report" th:each="r : ${reports}">
+        <h2>
+            <span th:text="${r.date}">2026-10-24</span>
+            <span class="meta" th:text="${r.articleCount} + ' 条 · 生成于 ' + ${#temporals.format(r.createdAt, 'HH:mm')}">12 条</span>
+        </h2>
+        <div class="md" th:utext="${r.html}"></div>
+    </div>
+</div>
+</body>
+</html>

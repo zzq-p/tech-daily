@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: tech-daily
+  datasource:
+    url: jdbc:h2:file:./data/techdaily;MODE=PostgreSQL;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8090
+
+techdaily:
+  schedule:
+    # 每天 08:30 生成并推送(秒 分 时 日 月 周)
+    cron: "0 30 8 * * *"
+  fetch:
+    top-n: 30          # 检查 Hacker News 前 N 条热帖
+    min-score: 50      # HN 热帖最低分数
+    select-n: 12       # 日报收录条数
+    github-languages: [ "", "java" ]   # 空串=全部语言,可加 "python" 等
+  llm:
+    base-url: https://open.bigmodel.cn/api/paas/v4   # OpenAI 兼容接口均可
+    model: glm-4.5-flash
+    api-key: ${TECHDAILY_LLM_API_KEY:}               # 为空则降级为无摘要的纯列表日报
+  push:
+    channel: none     # none | wecom | serverchan
+    wecom-webhook: ${TECHDAILY_WECOM_WEBHOOK:}
+    serverchan-key: ${TECHDAILY_SERVERCHAN_KEY:}
